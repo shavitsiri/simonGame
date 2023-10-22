@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import GameScreen from '../Screens/GameScreen';
 import ResultsScreen from '../Screens/ResultsScreen';
