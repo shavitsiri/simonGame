@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, Button, TextInput, TouchableWithoutFeedback, Keyboard, Animated } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
 import Sound from 'react-native-sound';
 import Tts from 'react-native-tts';
 import { useNavigation } from '@react-navigation/native';
@@ -11,12 +11,8 @@ import { generateRandomSequence } from '../functions/sequenceUtils';
 
 
 
-// Define available button colors
-
-
 const GameScreen: React.FC = () => {
     Tts.setDefaultLanguage('en-US');
-    Tts.setDefaultRate(0.5);
     const buttonColors = ['red', 'green', 'blue', 'yellow'];
 
     // Redux using
@@ -47,6 +43,10 @@ const GameScreen: React.FC = () => {
     const [isPlayingSequence, setIsPlayingSequence] = useState<boolean>(true);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [startButtonEnable, setIsStartButtonEnable] = useState(false);
+    const [fadeGreenButton, setFadeGreenButton] = useState(false);
+    const [fadeBlueButton, setFadeBlueButton] = useState(false);
+    const [fadeRedButton, setFadeRedButton] = useState(false);
+    const [fadeYellowButton, setFadeYellowButton] = useState(false);
   
 
     // Define a sound for button presses by the user
@@ -111,16 +111,57 @@ const GameScreen: React.FC = () => {
 
 
     // Function sounds the sequence of the colors
-    const playSequence = (sequenceToPlay: string, level: number) => {
+    // const playSequence = (sequenceToPlay: string, level: number) => {
+    //     setIsPlayingSequence(true);
+    //     const words = sequenceToPlay.split(' ');
+    //     for (let index = 0; index <= level; index++) {
+    //         Tts.speak(words[index]);
+    //     }
+    //     setTimeout(() => {
+    //         setIsPlayingSequence(false);
+    //     }, level*800);
+    // };
+
+    async function playSequence(sequenceToPlay: string, level: number) {
         setIsPlayingSequence(true);
         const words = sequenceToPlay.split(' ');
+      
+        // Add an initial delay of one second
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      
         for (let index = 0; index <= level; index++) {
-            Tts.speak(words[index]);
+          if (words[index] === 'green') {
+            setFadeGreenButton(true);
+          } else if (words[index] === 'blue') {
+            setFadeBlueButton(true);
+          } else if (words[index] === 'red') {
+            setFadeRedButton(true);
+          } else if (words[index] === 'yellow') {
+            setFadeYellowButton(true);
+          }
+          Tts.speak(words[index]);
+          
+          // Delay to show the button for a period
+          await new Promise((resolve) => setTimeout(resolve, 800));
+      
+          // Hide all buttons
+          setFadeGreenButton(false);
+          setFadeBlueButton(false);
+          setFadeRedButton(false);
+          setFadeYellowButton(false);
+      
+          // Delay before moving to the next button
+          await new Promise((resolve) => setTimeout(resolve, 800));
+      
         }
+      
         setTimeout(() => {
-            setIsPlayingSequence(false);
-        }, level*800);
-    };
+          setIsPlayingSequence(false);
+        }, level * 340);
+      }
+      
+      
+      
 
 
 
@@ -167,6 +208,11 @@ const GameScreen: React.FC = () => {
         <Text style={styles.scoreText}>Score: {score == -1 ? '0' : score}</Text>
         <View style={styles.buttonContainer}>
 
+            {fadeGreenButton ? <TouchableOpacity style={styles.greenButtonFade} /> : null}
+            {fadeBlueButton ? <TouchableOpacity style={styles.blueButtonFade} /> : null}
+            {fadeRedButton ? <TouchableOpacity style={styles.redButtonFade} /> : null}
+            {fadeYellowButton ? <TouchableOpacity style={styles.yellowButtonFade} /> : null}
+            
             {buttonColors.slice(0, 2).map((color, index) => (
                 <TouchableOpacity
                     key={index}
@@ -294,6 +340,44 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 15,
     padding: 5,
+  },
+  greenButtonFade:{
+    position:'absolute',
+    right:0,
+    width: 90,
+    height: 90,
+    borderRadius: 12,
+    margin: 10,
+    backgroundColor:'lightgreen',
+  },
+  blueButtonFade:{
+    position:'absolute',
+    top:110,
+    left:0,
+    width: 90,
+    height: 90,
+    borderRadius: 12,
+    margin: 10,
+    backgroundColor:'darkblue',
+  },
+  redButtonFade:{
+    position:'absolute',
+    left:0,
+    width: 90,
+    height: 90,
+    borderRadius: 12,
+    margin: 10,
+    backgroundColor:'red',
+  },
+  yellowButtonFade:{
+    position:'absolute',
+    top:110,
+    right:0,
+    width: 90,
+    height: 90,
+    borderRadius: 12,
+    margin: 10,
+    backgroundColor:'yellow',
   },
 });
 

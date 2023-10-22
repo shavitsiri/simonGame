@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducer/type';
 import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
-import { incrementScore, setOtherValue } from '../reducer/gameActions';
+import { setOtherValue } from '../reducer/gameActions';
 
 const ResultsScreen: React.FC = () => {
   const score = useSelector((state: RootState) => state.game.score);
