@@ -15,6 +15,8 @@ import { generateRandomSequence } from '../functions/sequenceUtils';
 
 
 const GameScreen: React.FC = () => {
+    Tts.setDefaultLanguage('en-US');
+    Tts.setDefaultRate(0.5);
     const buttonColors = ['red', 'green', 'blue', 'yellow'];
 
     // Redux using
