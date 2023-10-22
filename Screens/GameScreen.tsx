@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput, Image } from 'react-native';
 import Sound from 'react-native-sound';
 import Tts from 'react-native-tts';
 import { useNavigation } from '@react-navigation/native';
@@ -108,20 +108,6 @@ const GameScreen: React.FC = () => {
     }, [userInput]);
 
 
-
-
-    // Function sounds the sequence of the colors
-    // const playSequence = (sequenceToPlay: string, level: number) => {
-    //     setIsPlayingSequence(true);
-    //     const words = sequenceToPlay.split(' ');
-    //     for (let index = 0; index <= level; index++) {
-    //         Tts.speak(words[index]);
-    //     }
-    //     setTimeout(() => {
-    //         setIsPlayingSequence(false);
-    //     }, level*800);
-    // };
-
     async function playSequence(sequenceToPlay: string, level: number) {
         setIsPlayingSequence(true);
         const words = sequenceToPlay.split(' ');
@@ -157,7 +143,7 @@ const GameScreen: React.FC = () => {
       
         setTimeout(() => {
           setIsPlayingSequence(false);
-        }, level * 340);
+        }, level * 100);
       }
       
       
@@ -204,181 +190,195 @@ const GameScreen: React.FC = () => {
     };
 
   return (
-    <View style={styles.container}>
-        <Text style={styles.scoreText}>Score: {score == -1 ? '0' : score}</Text>
-        <View style={styles.buttonContainer}>
+        
+        <View style={styles.container}>
+            <Image style={styles.image_logo} source={require('../images/simon_game_logo.jpeg')} />
+            <Text style={styles.scoreText}>Score: {score == -1 ? '0' : score}</Text>
+            <View style={styles.buttonContainer}>
 
-            {fadeGreenButton ? <TouchableOpacity style={styles.greenButtonFade} /> : null}
-            {fadeBlueButton ? <TouchableOpacity style={styles.blueButtonFade} /> : null}
-            {fadeRedButton ? <TouchableOpacity style={styles.redButtonFade} /> : null}
-            {fadeYellowButton ? <TouchableOpacity style={styles.yellowButtonFade} /> : null}
-            
-            {buttonColors.slice(0, 2).map((color, index) => (
-                <TouchableOpacity
-                    key={index}
-                    style={[
-                    styles.button,
-                    { backgroundColor: color },
-                    isPlayingSequence && styles.disabledButton,
-                    ]}
-                    onPress={() => handleButtonPress(color)}
-                    disabled={isPlayingSequence}
-                />
-            ))}
+                {fadeGreenButton ? <TouchableOpacity style={styles.greenButtonFade} /> : null}
+                {fadeBlueButton ? <TouchableOpacity style={styles.blueButtonFade} /> : null}
+                {fadeRedButton ? <TouchableOpacity style={styles.redButtonFade} /> : null}
+                {fadeYellowButton ? <TouchableOpacity style={styles.yellowButtonFade} /> : null}
+                
+                {buttonColors.slice(0, 2).map((color, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[
+                        styles.button,
+                        { backgroundColor: color },
+                        isPlayingSequence && styles.disabledButton,
+                        ]}
+                        onPress={() => handleButtonPress(color)}
+                        disabled={isPlayingSequence}
+                    />
+                ))}
 
-        </View>
-        <View style={styles.buttonContainer}>
-            {buttonColors.slice(2, 4).map((color, index) => (
-                <TouchableOpacity
-                    key={index}
-                    style={[
-                    styles.button,
-                    { backgroundColor: color },
-                    isPlayingSequence && styles.disabledButton,
-                    ]}
-                    onPress={() => handleButtonPress(color)}
-                    disabled={isPlayingSequence}
-                />
-            ))}
-        </View>
- 
-
-        <TouchableOpacity style={styles.startButton} onPress={()=>{startGame();setIsStartButtonEnable(true);}} disabled={startButtonEnable}>
-            <Text style={styles.startButtonText}>Start</Text>
-        </TouchableOpacity>
-
-
-        <Modal visible={isModalVisible} onRequestClose={() => setIsModalVisible(false)} animationType="slide" transparent={true}>
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                <Text style={styles.ModalInputLabel}>Your Name: </Text>
-                <TextInput style={styles.ModalInputField} onChangeText={(text) => handleSetName(text)} placeholder="Jhon" />
-                <TouchableOpacity style={styles.ModalButton} onPress={() => { addScore2Async(score, name); setIsModalVisible(false); navigation.navigate('Results'); }}>
-                    <Text style={styles.ModalButtonText}>Close</Text>
-                </TouchableOpacity>
-                </View>
             </View>
-        </Modal>
+            <View style={styles.buttonContainer}>
+                {buttonColors.slice(2, 4).map((color, index) => (
+                    <TouchableOpacity
+                        key={index}
+                        style={[
+                        styles.button,
+                        { backgroundColor: color },
+                        isPlayingSequence && styles.disabledButton,
+                        ]}
+                        onPress={() => handleButtonPress(color)}
+                        disabled={isPlayingSequence}
+                    />
+                ))}
+            </View>
+    
 
-    </View>
+            <TouchableOpacity style={styles.startButton} onPress={()=>{startGame();setIsStartButtonEnable(true);}} disabled={startButtonEnable}>
+                <Text style={styles.startButtonText}>Start</Text>
+            </TouchableOpacity>
+
+        
+
+
+            <Modal visible={isModalVisible} onRequestClose={() => setIsModalVisible(false)} animationType="slide" transparent={true}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                    <Text style={styles.ModalInputLabel}>Your Name: </Text>
+                    <TextInput style={styles.ModalInputField} onChangeText={(text) => handleSetName(text)} placeholder="Jhon" />
+                    <TouchableOpacity style={styles.ModalButton} onPress={() => { addScore2Async(score, name); setIsModalVisible(false); navigation.navigate('Results'); }}>
+                        <Text style={styles.ModalButtonText}>Continue</Text>
+                    </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+        </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#6C7FC2',
-  },
-  scoreText: {
-    fontSize: 36,
-    marginBottom: 40,
-    color: 'black',
-    fontWeight: '700',
-  },
-  button: {
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-    margin: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  disabledButton: {
-    opacity: 0.5,
-  },
-  startButton: {
-    backgroundColor: '#4CAF50',
-    padding: 10,
-    borderRadius: 12,
-    width: 150,
-    marginTop: 35,
-  },
-  startButtonText: {
-    color: 'white',
-    fontSize: 22,
-    alignSelf: 'center',
-  },
-  ModalInputLabel: {
-    color: 'black',
-    fontSize: 18,
-    padding: 7,
-    alignSelf: 'center',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 20,
-    width: '80%',
-  },
-  ModalInputField: {
-    width: '60%',
-    borderWidth: 1,
-    borderColor: '#868686',
-    borderRadius: 12,
-    padding: 7,
-    marginBottom: 10,
-    alignSelf: 'center',
-  },
-  ModalButton: {
-    width: 100,
-    backgroundColor: 'midnightblue',
-    alignSelf: 'center',
-    borderRadius: 12,
-  },
-  ModalButtonText: {
-    color: 'white',
-    alignSelf: 'center',
-    fontSize: 15,
-    padding: 5,
-  },
-  greenButtonFade:{
-    position:'absolute',
-    right:0,
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-    margin: 10,
-    backgroundColor:'lightgreen',
-  },
-  blueButtonFade:{
-    position:'absolute',
-    top:110,
-    left:0,
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-    margin: 10,
-    backgroundColor:'darkblue',
-  },
-  redButtonFade:{
-    position:'absolute',
-    left:0,
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-    margin: 10,
-    backgroundColor:'red',
-  },
-  yellowButtonFade:{
-    position:'absolute',
-    top:110,
-    right:0,
-    width: 90,
-    height: 90,
-    borderRadius: 12,
-    margin: 10,
-    backgroundColor:'yellow',
-  },
+    imageBackground:{
+        flex: 1,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#343539',
+    },
+    image_logo:{
+        position:'relative',
+        right:100,
+        width:130,
+        height:40,
+        bottom:30,
+    },
+    scoreText: {
+        fontSize: 36,
+        marginBottom: 40,
+        color: 'aliceblue',
+        fontWeight: '700',
+    },
+    button: {
+        width: 90,
+        height: 90,
+        borderRadius: 12,
+        margin: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    disabledButton: {
+        opacity: 0.5,
+    },
+    startButton: {
+        backgroundColor: '#4CAF50',
+        padding: 10,
+        borderRadius: 12,
+        width: 150,
+        marginTop: 35,
+    },
+    startButtonText: {
+        color: 'white',
+        fontSize: 22,
+        alignSelf: 'center',
+    },
+    ModalInputLabel: {
+        color: 'black',
+        fontSize: 18,
+        padding: 7,
+        alignSelf: 'center',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalView: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 20,
+        width: '80%',
+    },
+    ModalInputField: {
+        width: '60%',
+        borderWidth: 1,
+        borderColor: '#868686',
+        borderRadius: 12,
+        padding: 7,
+        marginBottom: 10,
+        alignSelf: 'center',
+    },
+    ModalButton: {
+        width: 100,
+        backgroundColor: 'midnightblue',
+        alignSelf: 'center',
+        borderRadius: 12,
+    },
+    ModalButtonText: {
+        color: 'white',
+        alignSelf: 'center',
+        fontSize: 15,
+        padding: 5,
+    },
+    greenButtonFade:{
+        position:'absolute',
+        right:0,
+        width: 90,
+        height: 90,
+        borderRadius: 12,
+        margin: 10,
+        backgroundColor:'lightgreen',
+    },
+    blueButtonFade:{
+        position:'absolute',
+        top:110,
+        left:0,
+        width: 90,
+        height: 90,
+        borderRadius: 12,
+        margin: 10,
+        backgroundColor:'#4C7DFF',
+    },
+    redButtonFade:{
+        position:'absolute',
+        left:0,
+        width: 90,
+        height: 90,
+        borderRadius: 12,
+        margin: 10,
+        backgroundColor:'red',
+    },
+    yellowButtonFade:{
+        position:'absolute',
+        top:110,
+        right:0,
+        width: 90,
+        height: 90,
+        borderRadius: 12,
+        margin: 10,
+        backgroundColor:'yellow',
+    },
 });
 
 export default GameScreen;

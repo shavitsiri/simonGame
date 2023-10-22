@@ -8,8 +8,8 @@ const Stack = createStackNavigator();
 const NavigationStack = () => {
   return (
     <Stack.Navigator initialRouteName="Game">
-      <Stack.Screen name="Game" component={GameScreen} />
-      <Stack.Screen name="Results" component={ResultsScreen} />
+      <Stack.Screen name="Game" component={GameScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Results" component={ResultsScreen} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
